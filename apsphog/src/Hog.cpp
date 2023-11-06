@@ -1,4 +1,4 @@
-#include "Hog.h"
+#include "../include/Hog.h"
 
 int Hog::suffix_prefix_length(int i, int j){
     int cur = _strToTreeIndex[i];
@@ -9,8 +9,4 @@ int Hog::suffix_prefix_length(int i, int j){
         cur = t[cur].suf_link();
     }
     return cur;
-}
-
-int main(){
-    
 }

@@ -6,3 +6,5 @@ gmon.out
 *.cmake
 */CMakeFiles
 *Cache*
+*.so
+Makefile
