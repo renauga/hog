@@ -1,0 +1,8 @@
+/bin
+/log
+gmon.out
+/.vscode
+*.png
+*.cmake
+*/CMakeFiles
+*Cache*
