@@ -9,10 +9,21 @@ using namespace std;
 #include "HOG-SSP.h"
 typedef HOG_SSP HOG;
 
-#else
+#elif SK
 
 #include "HOG-SK.h"
 typedef HOG_SK HOG;
+
+#elif BCER
+
+#include "HOG-BCER.h"
+typedef HOG_BCER HOG;
+
+
+#else
+
+#include "HOG-EC.h"
+typedef HOG_EC HOG;
 
 #endif
 
@@ -134,8 +145,12 @@ void real_data_test() {
 int main() {
     #ifdef SSP
         cout<<"\nUsing algo by SSP...\n";
-    #else 
+    #elif SK
         cout<<"\nUsing algo by SK...\n";
+    #elif BCER
+        cout<<"\nUsing algo by BCER...\n";
+    #else
+        cout<<"\nUsing algo by EC...\n";
     #endif
     int seed = chrono::system_clock::now().time_since_epoch().count();
     test_validity();
