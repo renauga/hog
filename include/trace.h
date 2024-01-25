@@ -73,7 +73,7 @@ void __f(const char *names, Arg1 &&arg1, Args &&... args) {
 	__f(comma+1,args...);
 }
 
-#define trace(...) std::cout<<"Line:"<<__LINE__<<" ", __f(#__VA_ARGS__, __VA_ARGS__)
+#define trace(...) std::cout<<"File Name:"<< __FILE__ <<" "<<"Line:"<<__LINE__<<" ", __f(#__VA_ARGS__, __VA_ARGS__)
 #else
 #define trace(...)
 #define error(...)
