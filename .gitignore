@@ -8,3 +8,5 @@ gmon.out
 *Cache*
 *.so
 Makefile
+/data
+/.gitignore
