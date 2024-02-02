@@ -20,11 +20,14 @@ typedef HOG_SK HOG;
 typedef HOG_BCER HOG;
 
 
-#else
+#elif EC
 
 #include "HOG-EC.h"
 typedef HOG_EC HOG;
 
+#else
+#include "HOG-SKx.h"
+typedef HOG_SKx HOG;
 #endif
 
 const int TRIALS = 10;
@@ -35,6 +38,21 @@ void test_validity() {
     vector<string> v = {"aabaa", "aadbd", "dbdaa"};
     HOG hog(v);
     assert(hog.marked == vector<bool>({0,1,0,1,0,0,1,0,0,1,0,0,1,0,1}));
+    cout<<"All tests passed\n";
+}
+void test_validity_queries(){
+    cout << "\nTesting validity of queries\n";
+    vector<string> v = {"aabaa", "dbdaa", "aadbd"};
+    HOG hog(v);
+    trace(hog.marked);
+    // assert(hog.marked == vector<bool>({0,1,0,1,0,0,1,0,0,1,0,0,1,0,1}));
+    Hog hg = hog.make_hog();
+    assert(hg.suffix_prefix_length(0,2)==2);
+    assert(hg.suffix_prefix_length(2,0)==0);
+    assert(hg.suffix_prefix_length(0,1)==0);
+    assert(hg.suffix_prefix_length(1,0)==2);
+    assert(hg.suffix_prefix_length(2,1)==3);
+    assert(hg.suffix_prefix_length(1,2)==2);
     cout<<"All tests passed\n";
 }
 
@@ -167,9 +185,10 @@ int main(int argc, char **argv) {
     // int seed = chrono::system_clock::now().time_since_epoch().count();
     // int n = pow(10, stod(argv[1])/10), p = pow(10, stod(argv[2])/10),seed = 42;
     // double o = stod(argv[3]);
-    // test_validity();
+    test_validity();
+    test_validity_queries();
     // random_strings_stress_test(n, p, seed);
     // random_string_reads_stress_test(n, p, o, seed);
-    real_data_test();
+    // real_data_test();
     return 0;
 }

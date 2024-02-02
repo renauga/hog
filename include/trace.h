@@ -5,6 +5,11 @@
 
 #include <bits/stdc++.h>
 
+template<typename T, typename F>
+void __p(std::pair<T, F> a);
+template<typename T>
+void __p(std::vector<T> a);
+
 template<typename T>
 void __p(T a) {
 	std::cout<<a;

@@ -4,6 +4,7 @@
 #include <bits/stdc++.h>
 
 #include "Aho-Cora.h"
+#include "../apsphog/include/Hog.h"
 
 struct HOG_SK {
     std::vector<bool> marked;
@@ -14,6 +15,7 @@ struct HOG_SK {
     void add_string(const std::string& s);
     void add_strings(const std::vector<std::string>& v);
     void construct();
+    Hog make_hog();
 
     private:
     AhoCorasick trie;

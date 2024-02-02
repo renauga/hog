@@ -13,6 +13,7 @@ struct AhoxNode {
     int go[alphabet] = {0}; // best possible transition from this node
     int l, r;
     int str_index;
+    int length = 0;
     inline AhoxNode(int par, char ch) : p(par), pch(ch) {}
     inline bool is_leaf() {return output;}
 };

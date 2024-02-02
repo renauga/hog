@@ -13,19 +13,25 @@ AhoCoraxsick::AhoCoraxsick() {
 void AhoCoraxsick::add_string(string const& s) {
     int v = 1;
     str_count++;
-    t[v].r = str_count;
+    bool is_new_string = 0;
     for (char ch : s) {
         int c = ch - 'a';
         if (t[v].next[c] == 0) {
             t[v].next[c] = t.size();
             t.emplace_back(v, ch);
-            t[t.size()-1].l = str_count;
+            // t[t.size()-1].str_index = str_count-1;
+            t[t.size()-1].length = t[v].length+1;
         }
         v = t[v].next[c];
-        t[v].r = str_count;
     }
-    t[v].output = true;
-    leaves.push_back(v);
+    if(t[v].output == true){
+        str_count--;
+    }
+    else{
+        t[v].output = true;
+        leaves.push_back(v);
+        t[v].str_index = str_count-1;
+    }
 }
 
 int AhoCoraxsick::get_link(int v) {
@@ -67,7 +73,7 @@ std::vector<int> AhoCoraxsick::sorted_order(){
 void AhoCoraxsick::dfs(int v, std::vector<int>&leaves_in_order, int &leaves_visited){
     if(t[v].is_leaf()){
         t[v].l = t[v].r = leaves_visited;
-        t[v].str_index = leaves_visited;
+        // t[v].str_index = leaves_visited;
         leaves_in_order.push_back(t[v].str_index);
         leaves_visited++;
     }
@@ -84,9 +90,8 @@ void AhoCoraxsick::dfs(int v, std::vector<int>&leaves_in_order, int &leaves_visi
     }
     for(int i = alphabet-1;i>=0;i--){
         if(t[v].next[i] != 0){
-            t[v].l = t[t[v].next[i]].l;
+            t[v].r = t[t[v].next[i]].r;
             break;
         }
     }
-
 }
