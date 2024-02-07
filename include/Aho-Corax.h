@@ -11,7 +11,7 @@ struct AhoxNode {
     bool output = false; // is this node an exact match
     int next[alphabet]= {0}; // direct transition from this node using a character
     int go[alphabet] = {0}; // best possible transition from this node
-    int l, r;
+    int l = 1e9, r = -1e9;
     int str_index;
     int length = 0;
     inline AhoxNode(int par, char ch) : p(par), pch(ch) {}

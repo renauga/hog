@@ -88,6 +88,7 @@ Hog HOG_SKx::make_hog(){
     Hog hog_tree;
     hog_tree.sorted_order_conversion = sorted_order_conversion;
     hog_tree._strToTreeIndex.resize(sorted_order_conversion.size());
+    hog_tree.sorted_order = order;
     vector<int>suf_links(marked.size(),-1);
     vector<int>aho_to_hog(marked.size());
     for(int i = 1;i<(int)marked.size();i++){

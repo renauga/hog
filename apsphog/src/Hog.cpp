@@ -10,7 +10,6 @@ int Hog::suffix_prefix_length(int i, int j){
         } 
         cur = t[cur].suf_link();
     }
-    // trace(cur);
     return t[cur].length();
 }
 
@@ -44,10 +43,9 @@ std::vector<int> Hog::one_to_all(int i){
     return answerFinal;
 }
 
-std::pair<std::vector<int>,std::vector<int>>  Hog::top(int i, int k){
+std::vector<int>  Hog::top(int i, int k){
     i = sorted_order_conversion[i];
     std::vector<int> answer;
-    std::vector<int>answer2;
     int current = _strToTreeIndex[i];
     std::vector<int> nextRemaining(sorted_order_conversion.size());
     for(int i = 0;i<(int)nextRemaining.size();i++){
@@ -65,7 +63,6 @@ std::pair<std::vector<int>,std::vector<int>>  Hog::top(int i, int k){
             if(curIndex > end)break;
             if(currentCount >= k)break;
             answer.push_back(curIndex);
-            answer2.push_back(t[current].length());
             currentCount++;
             curIndex = curIndex+1;
         }
@@ -73,5 +70,67 @@ std::pair<std::vector<int>,std::vector<int>>  Hog::top(int i, int k){
         nextRemaining[start] = end+1;
         current = t[current].suf_link();
     }
-    return {answer,answer2};
+    std::vector<int>answerUserIndex(answer.size());
+    for(int i = 0;i<(int)answer.size();i++){
+        answerUserIndex[i] = sorted_order[answer[i]];
+    }
+    return answerUserIndex;
+}
+
+std::vector<int> Hog::report(int i, int l){
+    i = sorted_order_conversion[i];
+    std::vector<int> answer;
+    int current = _strToTreeIndex[i];
+    std::vector<int> nextRemaining(sorted_order_conversion.size());
+    for(int i = 0;i<(int)nextRemaining.size();i++){
+        nextRemaining[i] = i;
+    }
+    int currentCount = 0;
+    while(t[current].length() >= l){
+        int start = t[current].from();
+        int end = t[current].to();
+        int curIndex = start;
+        while(curIndex <= end){
+            while(curIndex <= end && curIndex != nextRemaining[curIndex]){
+                curIndex = nextRemaining[curIndex];
+            }
+            if(curIndex > end)break;
+            answer.push_back(curIndex);
+            currentCount++;
+            curIndex = curIndex+1;
+        }
+        nextRemaining[start] = end+1;
+        current = t[current].suf_link();
+    }
+    std::vector<int>answerUserIndex(answer.size());
+    for(int i = 0;i<(int)answer.size();i++){
+        answerUserIndex[i] = sorted_order[answer[i]];
+    }
+    return answerUserIndex;
+}
+
+int Hog::count(int i, int l){
+    i = sorted_order_conversion[i];
+    int current = _strToTreeIndex[i];
+    std::vector<int> nextRemaining(sorted_order_conversion.size());
+    for(int i = 0;i<(int)nextRemaining.size();i++){
+        nextRemaining[i] = i;
+    }
+    int currentCount = 0;
+    while(t[current].length() >= l){
+        int start = t[current].from();
+        int end = t[current].to();
+        int curIndex = start;
+        while(curIndex <= end){
+            while(curIndex <= end && curIndex != nextRemaining[curIndex]){
+                curIndex = nextRemaining[curIndex];
+            }
+            if(curIndex > end)break;
+            currentCount++;
+            curIndex = curIndex+1;
+        }
+        nextRemaining[start] = end+1;
+        current = t[current].suf_link();
+    }
+    return currentCount;
 }

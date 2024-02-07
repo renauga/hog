@@ -10,3 +10,5 @@ gmon.out
 Makefile
 /data
 /.gitignore
+CMakeFiles/
+.gitignore

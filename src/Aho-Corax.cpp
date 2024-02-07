@@ -13,7 +13,6 @@ AhoCoraxsick::AhoCoraxsick() {
 void AhoCoraxsick::add_string(string const& s) {
     int v = 1;
     str_count++;
-    bool is_new_string = 0;
     for (char ch : s) {
         int c = ch - 'a';
         if (t[v].next[c] == 0) {
@@ -84,13 +83,13 @@ void AhoCoraxsick::dfs(int v, std::vector<int>&leaves_in_order, int &leaves_visi
     }
     for(int i = 0;i<alphabet;i++){
         if(t[v].next[i] != 0){
-            t[v].l = t[t[v].next[i]].l;
+            t[v].l = min(t[t[v].next[i]].l, t[v].l);
             break;
         }
     }
     for(int i = alphabet-1;i>=0;i--){
         if(t[v].next[i] != 0){
-            t[v].r = t[t[v].next[i]].r;
+            t[v].r = max(t[t[v].next[i]].r, t[v].r);
             break;
         }
     }
