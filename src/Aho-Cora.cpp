@@ -41,3 +41,29 @@ int AhoCorasick::get_link(int v) {
     }
     return t[v].link;
 }
+
+void AhoCorasick::construct() {
+    queue<int> q;
+    for(int i=0;i<alphabet;i++) {
+        if(t[1].next[i] != 0) {
+            t[t[1].next[i]].link = 1;
+            for(int j=0;j<alphabet;j++) {
+                if(t[t[1].next[i]].next[j] != 0) {
+                    q.push(t[t[1].next[i]].next[j]);
+                }
+            }
+        }
+    }
+    while(!q.empty()) {
+        int v = q.front();
+        q.pop();
+        int x = t[t[v].p].link, c = t[v].pch-'a';
+        while(t[x].next[c] == 0 && x != 1) {
+            x = t[x].link;
+        }
+        t[v].link = (t[x].next[c] == 0 ? 1 : t[x].next[c]);
+        for(int i=0;i<alphabet;i++) {
+            if(t[v].next[i] != 0) q.push(t[v].next[i]);
+        }
+    }
+}

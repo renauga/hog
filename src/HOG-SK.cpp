@@ -21,6 +21,7 @@ void HOG_SK::add_strings(const vector<string>& v) {
     trie.leaves.reserve(v.size());
     trie.t.reserve(p);
     for(auto &s:v) add_string(s);
+    // trie.construct();
     trial_results["aho_memory"] = sizeof(AhoCorasick) + sizeof(AhoNode)*trie.t.capacity() + sizeof(int)*trie.leaves.capacity();
 }
 

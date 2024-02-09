@@ -24,6 +24,7 @@ struct AhoCorasick {
 
     void add_string(std::string const& s);
     int get_link(int v);
+    void construct();
 };
 
 
