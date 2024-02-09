@@ -14,7 +14,8 @@ struct HOG_SSP {
     void add_string(const std::string& s);
     void add_strings(const std::vector<std::string>& v);
     void construct();
-
+    void print_details();
+    
     private:
     EHOG trie;
 };

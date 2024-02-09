@@ -39,7 +39,7 @@ void test_validity() {
     // vector<string> v = {"aabaab"};
     HOG hog(v);
     trace(v);
-    assert(hog.marked == vector<bool>({0,1,0,1,0,0,1,0,0,1,0,0,1,0,1}));
+    assert(hog.marked == vector<bool>({0,1,0,1,1,1,0,1,1}));
     cout<<"All tests passed\n";
 }
 
@@ -64,7 +64,7 @@ void test_with(const vector<string>& v) {
 pair<double, double> get_mean_and_sd(vector<double> &a) {
     sort(a.begin(), a.end());
     double sum = 0, sq_sum = 0, cnt=0;
-    for(int i=a.size()/10;i<(9*a.size()/10);i++) {
+    for(int i=0;i<a.size();i++) {
         sum += a[i];
         sq_sum += a[i]*a[i];
         cnt++;
@@ -86,13 +86,17 @@ void stress_test_with(const vector<string>& v) {
         hog_times[i] = hog_t.end();
         tot_times[i] = aho_times[i] + hog_times[i];
     }
+    HOG hog;
+    hog.add_strings(v);
+    hog.construct();
+    hog.print_details();
     auto aho_data = get_mean_and_sd(aho_times);
     auto hog_data = get_mean_and_sd(hog_times);
     auto tot_data = get_mean_and_sd(tot_times);
     cout<<fixed<<setprecision(6);
     cout<<"Aho: "<<aho_data.first<<' '<<aho_data.second<<'\n';
     cout<<"HOG: "<<hog_data.first<<' '<<hog_data.second<<'\n';
-    // cout<<tot_data.first<<' '<<tot_data.second<<' ';
+    cout<<"Tot: "<<tot_data.first<<' '<<tot_data.second<<'\n';
 }
 
 void random_strings_stress_test(int n, int p, int seed) {
@@ -175,6 +179,6 @@ int main(int argc, char **argv) {
     // test_validity_queries();
     // random_strings_stress_test(n, p, seed);
     // random_string_reads_stress_test(n, p, o, seed);
-    // real_data_test();
+    real_data_test();
     return 0;
 }

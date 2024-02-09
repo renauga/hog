@@ -64,3 +64,10 @@ void HOG_SSP::construct() {
         modified.clear();
     }
 }
+void HOG_SSP::print_details(){
+    std::cout << "Aho-Corasick Size: " << trie.trie.t.size() << "\n";
+    std::cout << "EHOG Size: " << trie.t.size() << "\n";
+    int hsz = 0;
+    for(bool a:marked)hsz+=a;
+    std::cout << "HOG Size: " << hsz << "\n";
+}

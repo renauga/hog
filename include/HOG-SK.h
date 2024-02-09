@@ -16,6 +16,7 @@ struct HOG_SK {
     void add_strings(const std::vector<std::string>& v);
     void construct();
     Hog make_hog();
+    void print_details();
 
     private:
     EHOG trie;
