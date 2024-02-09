@@ -64,7 +64,7 @@ void test_with(const vector<string>& v) {
 pair<double, double> get_mean_and_sd(vector<double> &a) {
     sort(a.begin(), a.end());
     double sum = 0, sq_sum = 0, cnt=0;
-    for(int i=0;i<a.size();i++) {
+    for(int i=0;i<(int)a.size();i++) {
         sum += a[i];
         sq_sum += a[i]*a[i];
         cnt++;
@@ -75,28 +75,30 @@ pair<double, double> get_mean_and_sd(vector<double> &a) {
 
 void stress_test_with(const vector<string>& v) {
     vector<double> aho_times(TRIALS), hog_times(TRIALS), tot_times(TRIALS);
+#ifdef DATASET_MEMORY
+    exit(0);
+#endif
     for(int i=0;i<TRIALS;i++) {
         HOG hog;
         timer ahocora_t;
         hog.add_strings(v);
         aho_times[i] = ahocora_t.end();
-        
+#ifdef AHO_CORASICK_MEMORY
+    exit(0);
+#endif
         timer hog_t;
         hog.construct();
         hog_times[i] = hog_t.end();
         tot_times[i] = aho_times[i] + hog_times[i];
+        if(i == TRIALS - 1)hog.print_details();
     }
-    HOG hog;
-    hog.add_strings(v);
-    hog.construct();
-    hog.print_details();
     auto aho_data = get_mean_and_sd(aho_times);
     auto hog_data = get_mean_and_sd(hog_times);
     auto tot_data = get_mean_and_sd(tot_times);
     cout<<fixed<<setprecision(6);
     cout<<"Aho: "<<aho_data.first<<' '<<aho_data.second<<'\n';
     cout<<"HOG: "<<hog_data.first<<' '<<hog_data.second<<'\n';
-    cout<<"Tot: "<<tot_data.first<<' '<<tot_data.second<<'\n';
+    cout<<"Tot: "<<tot_data.first<<' '<<tot_data.second<<std::endl;
 }
 
 void random_strings_stress_test(int n, int p, int seed) {
@@ -137,10 +139,11 @@ void random_string_reads_stress_test(int n, int p, double overlap, int seed) {
     stress_test_with(v);
 }
 
-void real_data_test() {
+void real_data_test(std::string dataset_name) {
     string data_path = "data/";
     // vector<string> filenames = {"clementina", "sinensis", "trifoliata", "elegans"};
-    vector<string> filenames = {"trifoliata"};
+    vector<string> filenames = {dataset_name};
+
     for(string fname:filenames) {
         cout<<'\n'<<fname<<":\n";
         fstream fin;
@@ -175,10 +178,11 @@ int main(int argc, char **argv) {
     // int seed = chrono::system_clock::now().time_since_epoch().count();
     // int n = pow(10, stod(argv[1])/10), p = pow(10, stod(argv[2])/10),seed = 42;
     // double o = stod(argv[3]);
-    test_validity();
+    std::string d_name = argv[1];
+    // test_validity();
     // test_validity_queries();
     // random_strings_stress_test(n, p, seed);
     // random_string_reads_stress_test(n, p, o, seed);
-    real_data_test();
+    real_data_test(argv[1]);
     return 0;
 }
