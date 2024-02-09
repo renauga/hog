@@ -30,7 +30,7 @@ typedef HOG_EC HOG;
 typedef HOG_SK HOG;
 #endif
 
-const int TRIALS = 10;
+const int TRIALS = 3;
 
 //TODO : write bigger validity test comparing dumps from both algos
 void test_validity() {
@@ -84,7 +84,6 @@ void stress_test_with(const vector<string>& v) {
         timer hog_t;
         hog.construct();
         hog_times[i] = hog_t.end();
-
         tot_times[i] = aho_times[i] + hog_times[i];
     }
     auto aho_data = get_mean_and_sd(aho_times);

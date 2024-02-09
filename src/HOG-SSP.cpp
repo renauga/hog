@@ -1,5 +1,5 @@
 #include "HOG-SSP.h"
-
+#include "trace.h"
 using namespace std;
 
 HOG_SSP::HOG_SSP() {}
@@ -10,15 +10,16 @@ HOG_SSP::HOG_SSP(const vector<string>& v) {
 }
 
 void HOG_SSP::add_string(const string& s) {
-    trie.add_string(s);
+    trie.trie.add_string(s);
 }
 
 void HOG_SSP::add_strings(const vector<string>& v) {
     int p = 0;
     for(auto &s:v) p += s.length();
-    trie.leaves.reserve(v.size());
-    trie.t.reserve(p);
+    trie.trie.leaves.reserve(v.size());
+    trie.trie.t.reserve(p);
     for(auto &s:v) add_string(s);
+    trie.construct();
 }
 
 void HOG_SSP::construct() {

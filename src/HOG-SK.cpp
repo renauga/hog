@@ -1,4 +1,5 @@
 #include "HOG-SK.h"
+#include "trace.h"
 
 using namespace std;
 
@@ -10,15 +11,16 @@ HOG_SK::HOG_SK(const vector<string>& v) {
 }
 
 void HOG_SK::add_string(const std::string& s) {
-    trie.add_string(s);
+    trie.trie.add_string(s);
 }
 
 void HOG_SK::add_strings(const vector<string>& v) {
     int p = 0;
     for(auto &s:v) p += s.length();
-    trie.leaves.reserve(v.size());
-    trie.t.reserve(p);
+    trie.trie.leaves.reserve(v.size());
+    trie.trie.t.reserve(p);
     for(auto &s:v) add_string(s);
+    trie.construct();
 }
 
 void HOG_SK::construct() {
@@ -59,12 +61,9 @@ void HOG_SK::dfs(int node) {
             unmarked.push_back(x);
         }
     }
-    for(int i=0;i<alphabet;i++) {
-        if(trie.t[node].next[i] != 0) {
-            dfs(trie.t[node].next[i]);
-        }
+    for(int child : trie.t[node].childs){
+        dfs(child);
     }
-
     // node visited for the last time
     for(int x:l[node]) {
         s[x].pop();

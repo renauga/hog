@@ -1,10 +1,11 @@
-#include "EHOG.h"
+#include "EHOGx.h"
 #include "trace.h"
 using namespace std;
 
-EHOG::EHOG() {}
+EHOGx::EHOGx() {}
 
-void EHOG::construct(){
+void EHOGx::construct(){
+    trie.sorted_order();
     marked.resize(trie.t.size());
     for(int v: trie.leaves){
         int temp = v;
@@ -19,11 +20,22 @@ void EHOG::construct(){
     dfs(1, 0);
 }
 
-int EHOG::get_link(int v){
+int EHOGx::get_link(int v){
     return conversion[trie.get_link(t[v].aho_index)];
 }
+void EHOGx::build_rl(){
+    for(int v:leaves){
+        int temp = v;
+        int str_index = trie.t[t[v].aho_index].str_index;
+        while(temp!=1){
+            t[temp].rl.push_back(str_index);   
+            temp = get_link(temp); 
+        }
+        t[1].rl.push_back(str_index); 
+    }
+}
 
-void EHOG::dfs(int v, int par){
+void EHOGx::dfs(int v, int par){
     if(marked[v] == true){
         int eind = t.size();
         t[par].childs.push_back(eind);

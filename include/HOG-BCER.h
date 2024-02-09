@@ -1,6 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
-#include "EHOG.h"
+#include "EHOGx.h"
 
 struct HOG_BCER{
 public:
@@ -17,7 +17,7 @@ public:
 private:
 
     // AhoCorasick trie;
-    EHOG _etrie;
+    EHOGx _etrie;
     std::vector<bool>marked_ehog;
     void EHOG_construct();
     std::vector<bool> mark_hog(int v);

@@ -1,6 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
-#include "EHOG.h"
+#include "EHOGx.h"
 
 struct segtree{
     std::vector<int>nim, add;
@@ -59,7 +59,7 @@ public:
 private:
 
     // AhoCorasick trie;
-    EHOG _etrie;
+    EHOGx _etrie;
     std::vector<std::string>dictionary;
     void EHOG_construct();
 };

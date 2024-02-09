@@ -3,7 +3,7 @@
 
 #include <bits/stdc++.h>
 
-#include "Aho-Cora.h"
+#include "EHOG.h"
 #include "../apsphog/include/Hog.h"
 
 struct HOG_SK {
@@ -18,7 +18,7 @@ struct HOG_SK {
     Hog make_hog();
 
     private:
-    AhoCorasick trie;
+    EHOG trie;
     std::vector<std::vector<int>> l; //list of string indexes that have the i'th node on their suffix path
     std::vector<std::stack<int>> s;
     std::vector<int> unmarked; // list of indices of stacks that have unmarked tops
