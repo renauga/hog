@@ -13,3 +13,4 @@ Makefile
 CMakeFiles/
 .gitignore
 *.txt
+output*
