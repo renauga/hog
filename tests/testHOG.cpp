@@ -26,8 +26,8 @@ typedef HOG_BCER HOG;
 typedef HOG_EC HOG;
 
 #else
-#include "HOG-SKx.h"
-typedef HOG_SKx HOG;
+#include "HOG-SK.h"
+typedef HOG_SK HOG;
 #endif
 
 const int TRIALS = 10;
@@ -42,21 +42,6 @@ void test_validity() {
     assert(hog.marked == vector<bool>({0,1,0,1,0,0,1,0,0,1,0,0,1,0,1}));
     cout<<"All tests passed\n";
 }
-// void test_validity_queries(){
-//     cout << "\nTesting validity of queries\n";
-//     vector<string> v = {"aabaa", "dbdaa", "aadbd"};
-//     HOG hog(v);
-//     trace(hog.marked);
-//     // assert(hog.marked == vector<bool>({0,1,0,1,0,0,1,0,0,1,0,0,1,0,1}));
-//     Hog hg = hog.make_hog();
-//     assert(hg.suffix_prefix_length(0,2)==2);
-//     assert(hg.suffix_prefix_length(2,0)==0);
-//     assert(hg.suffix_prefix_length(0,1)==0);
-//     assert(hg.suffix_prefix_length(1,0)==2);
-//     assert(hg.suffix_prefix_length(2,1)==3);
-//     assert(hg.suffix_prefix_length(1,2)==2);
-//     cout<<"All tests passed\n";
-// }
 
 void test_with(const vector<string>& v) {
     HOG hog;
