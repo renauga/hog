@@ -21,10 +21,10 @@ void HOG_EC::add_strings(const vector<string>& v) {
     _etrie.trie.leaves.reserve(v.size());
     _etrie.trie.t.reserve(p);
     for(auto &s:v) add_string(s);
+    _etrie.construct();
 }
 
 void HOG_EC::construct(){
-    _etrie.construct();
     int n = _etrie.leaves.size();
     marked_ehog.resize(_etrie.t.size());
     for(int u:_etrie.leaves){

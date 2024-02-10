@@ -18,7 +18,8 @@ s=(clementina
     S_aureus_HiSeq
     V_cholerae_HiSeq 
     V_cholerae_MiSeq
-    X_axonopodis_HiSeq) 
+    X_axonopodis_HiSeq
+    ) 
 for dataset in ${s[@]};do
     # cmake . -DALGO=1 -DDATASET_MEMORY=1 > cmakedump
     # make HOG > makedump

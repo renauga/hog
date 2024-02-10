@@ -19,10 +19,10 @@ void HOG_BCER::add_strings(const vector<string>& v) {
     _etrie.trie.leaves.reserve(v.size());
     _etrie.trie.t.reserve(p);
     for(auto &s:v) add_string(s);
+    _etrie.construct();
 }
 
 void HOG_BCER::construct() {
-    _etrie.construct();
     vector<bool>bHOG(_etrie.t.size(), false);
     _etrie.build_rl();
     marked_ehog.resize(_etrie.t.size());

@@ -30,7 +30,7 @@ typedef HOG_EC HOG;
 typedef HOG_SK HOG;
 #endif
 
-const int TRIALS = 3;
+const int TRIALS = 1;
 
 //TODO : write bigger validity test comparing dumps from both algos
 void test_validity() {
@@ -140,7 +140,7 @@ void random_string_reads_stress_test(int n, int p, double overlap, int seed) {
 }
 
 void real_data_test(std::string dataset_name) {
-    string data_path = "data/";
+    string data_path = "/home/user/parth/data/";
     // vector<string> filenames = {"clementina", "sinensis", "trifoliata", "elegans"};
     vector<string> filenames = {dataset_name};
 
