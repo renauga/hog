@@ -1,9 +1,14 @@
-echo "" > memprofssp
-echo "" > memprofsk
-echo "" > outputsk
-echo "" > outputssp
+mkdir ehog_dump
+mkdir dump
+echo "" > ./dump/memprofssp
+echo "" > ./dump/memprofsk
+echo "" > ./dump/outputsk
+echo "" > ./dump/outputssp
+echo "" > ./dump/memprofehog
+echo "" > ./dump/outputehog
 format="%M\nreal %e\nuser %U\nsys %S\n"
-s=(clementina 
+s=(
+    clementina 
     sinensis 
     trifoliata 
     elegans 
@@ -20,30 +25,13 @@ s=(clementina
     V_cholerae_MiSeq
     X_axonopodis_HiSeq
     ) 
+cmake .
+make SSP
+make SK
+make SSPEHOG
+
 for dataset in ${s[@]};do
-    # cmake . -DALGO=1 -DDATASET_MEMORY=1 > cmakedump
-    # make HOG > makedump
-    # /usr/bin/time -f "$format" --output=memprof -a ./bin/HOG $dataset >> outputssp
-
-    cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/HOG $dataset >> outputssp
-
-    cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/HOG $dataset >> outputssp
-
-
-
-    # cmake . -DALGO=0 -DDATASET_MEMORY=1 > cmakedump
-    # make HOG > makedump
-    # /usr/bin/time -f "$format" --output=memprof -a ./bin/HOG $dataset >> outputsk
-
-    cmake . -DALGO=0 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/HOG $dataset >> outputsk
-
-    cmake . -DALGO=0 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/HOG $dataset >> outputsk
+    /usr/bin/time -f "$format" --output=./dump/memprofehog -a ./bin/SSPEHOG $dataset >> ./dump/outputehog
+    /usr/bin/time -f "$format" --output=./dump/memprofssp -a ./bin/SSP $dataset >> ./dump/outputssp
+    /usr/bin/time -f "$format" --output=./dump/memprofsk -a ./bin/SK $dataset >> ./dump/outputsk
 done

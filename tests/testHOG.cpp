@@ -29,37 +29,9 @@ typedef HOG_EC HOG;
 #include "HOG-SK.h"
 typedef HOG_SK HOG;
 #endif
+#include "EHOG.h"
 
 const int TRIALS = 1;
-
-//TODO : write bigger validity test comparing dumps from both algos
-void test_validity() {
-    cout << "\nTesting validity of algorithm\n";
-    vector<string> v = {"aabaa", "aadbd", "dbdaa"};
-    // vector<string> v = {"aabaab"};
-    HOG hog(v);
-    trace(v);
-    assert(hog.marked == vector<bool>({0,1,0,1,1,1,0,1,1}));
-    cout<<"All tests passed\n";
-}
-
-void test_with(const vector<string>& v) {
-    HOG hog;
-    cout<<"Building Aho-Corasick automaton..."; cout.flush();
-    timer ahocora_t;
-    hog.add_strings(v);
-    cout<<"Elapsed time: " << ahocora_t.end() << "s\n";
-    
-    cout<<"Constructing HOG..."; cout.flush();
-    timer hog_t;
-    hog.construct();
-    cout<<"Elapsed time: " << hog_t.end() << "s\n";
-
-    int cnt = 0;
-    for(auto b:hog.marked) cnt+=b;
-    cout << "Size of Aho-Corasick trie: " << hog.marked.size()-1 << ", Size of HOG: " << cnt
-         << ", Compression factor: "<< (double)cnt/(hog.marked.size()-1) << '\n';
-}
 
 pair<double, double> get_mean_and_sd(vector<double> &a) {
     sort(a.begin(), a.end());
@@ -72,35 +44,57 @@ pair<double, double> get_mean_and_sd(vector<double> &a) {
     double avg = sum/cnt, sd = sqrt(sq_sum/cnt - avg*avg);
     return {avg, sd};
 }
-
-void stress_test_with(const vector<string>& v) {
-    vector<double> aho_times(TRIALS), hog_times(TRIALS), tot_times(TRIALS);
-#ifdef DATASET_MEMORY
-    exit(0);
-#endif
+#ifdef EHOG_CONSTRUCTION
+void stress_test_with_ehog(const vector<string>& v, std::string filename) {
+    vector<double> ehog_times(TRIALS), hog_times(TRIALS), tot_times(TRIALS);
+    ofstream fout;
+    fout.open("./ehog_dump/"+filename, ios::out);
+    if(!fout) {
+        cout<<"couldn't open file: "<<filename<<endl;
+        return;
+    }
+    for(int i=0;i<TRIALS;i++) {
+        EHOG ehog;
+        timer ehog_t;
+        ehog.add_strings(v);
+        ehog_times[i] = ehog_t.end();
+        ehog.dump(fout);
+        // cout << ehog.t.size() << "\n";
+        // cout << ehog.leaves.size() << "\n";
+    }
+    auto ehog_data = get_mean_and_sd(ehog_times);
+    cout<<fixed<<setprecision(6);
+    cout<<"EHOG: "<<ehog_data.first<<' '<<ehog_data.second<<std::endl;
+}
+#else
+void stress_test_with_hog(std::string filename) {
+    vector<double> hog_times(TRIALS);
+    ifstream fin;
+    fin.open("./ehog_dump/"+filename, ios::in);
+    if(!fin) {
+        cout<<"couldn't open file: "<<filename<<endl;
+        return;
+    }
+    // cout << "here" << std::endl;
+    long long memehog;
     for(int i=0;i<TRIALS;i++) {
         HOG hog;
-        timer ahocora_t;
-        hog.add_strings(v);
-        aho_times[i] = ahocora_t.end();
-#ifdef AHO_CORASICK_MEMORY
-    exit(0);
-#endif
+        hog.inp(fin);
+        memehog = sizeof(EHOG_NODE)*(hog.t.size()) + sizeof(int)*(hog.leaves.size());
+        for(int i = 0;i<(int)hog.t.size();i++){
+            memehog+=hog.t[i].memory_calculate();
+        }
         timer hog_t;
         hog.construct();
         hog_times[i] = hog_t.end();
-        tot_times[i] = aho_times[i] + hog_times[i];
-        if(i == TRIALS - 1)hog.print_details();
+        if(i == TRIALS-1)hog.print_details();
     }
-    auto aho_data = get_mean_and_sd(aho_times);
     auto hog_data = get_mean_and_sd(hog_times);
-    auto tot_data = get_mean_and_sd(tot_times);
     cout<<fixed<<setprecision(6);
-    cout<<"Aho: "<<aho_data.first<<' '<<aho_data.second<<'\n';
-    cout<<"HOG: "<<hog_data.first<<' '<<hog_data.second<<'\n';
-    cout<<"Tot: "<<tot_data.first<<' '<<tot_data.second<<std::endl;
+    cout<<"ehog memory: "<<memehog<<"\n";
+    cout<<"hog: "<<hog_data.first<<' '<<hog_data.second<<std::endl;
 }
-
+#endif
 void random_strings_stress_test(int n, int p, int seed) {
     assert(p>=n);
     int len = p/n;
@@ -116,7 +110,7 @@ void random_strings_stress_test(int n, int p, int seed) {
         v.push_back(s);
     }
 
-    stress_test_with(v);
+    // stress_test_with(v);
 }
 
 void random_string_reads_stress_test(int n, int p, double overlap, int seed) {
@@ -136,11 +130,10 @@ void random_string_reads_stress_test(int n, int p, double overlap, int seed) {
         v.push_back(complete_string.substr((int)i,len));
     }
 
-    stress_test_with(v);
 }
 
 void real_data_test(std::string dataset_name) {
-    string data_path = "/home/user/parth/data/";
+    string data_path = "./data/";
     // vector<string> filenames = {"clementina", "sinensis", "trifoliata", "elegans"};
     vector<string> filenames = {dataset_name};
 
@@ -160,8 +153,11 @@ void real_data_test(std::string dataset_name) {
             total_length += v[i].length();
         }
         cout<<"Number of strings = "<<v.size()<<'\n'<<"Sum of lengths = "<<total_length<<'\n';
-
-        stress_test_with(v);
+#ifdef EHOG_CONSTRUCTION
+        stress_test_with_ehog(v,fname);
+#else
+        stress_test_with_hog(fname);
+#endif
     }
 }
 
