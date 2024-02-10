@@ -3,7 +3,8 @@ echo "" > memprofsk
 echo "" > outputsk
 echo "" > outputssp
 format="%M\nreal %e\nuser %U\nsys %S\n"
-s=(clementina 
+s=(
+    clementina 
     sinensis 
     trifoliata 
     elegans 
@@ -18,31 +19,21 @@ s=(clementina
     S_aureus_HiSeq
     V_cholerae_HiSeq 
     V_cholerae_MiSeq
-    X_axonopodis_HiSeq) 
+    X_axonopodis_HiSeq
+    ) 
+
+cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
+make SSPAHO > makedump
+cmake . -DALGO=2 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
+make SKAHO > makedump
+cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
+make SSP > makedump
+cmake . -DALGO=2 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
+make SK > makedump
+
 for dataset in ${s[@]};do
-    # cmake . -DALGO=1 -DDATASET_MEMORY=1 > cmakedump
-    # make HOG > makedump
-    # /usr/bin/time -f "$format" --output=memprof -a ./bin/HOG $dataset >> outputssp
-
-    cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/HOG $dataset >> outputssp
-
-    cmake . -DALGO=1 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/HOG $dataset >> outputssp
-
-
-
-    # cmake . -DALGO=0 -DDATASET_MEMORY=1 > cmakedump
-    # make HOG > makedump
-    # /usr/bin/time -f "$format" --output=memprof -a ./bin/HOG $dataset >> outputsk
-
-    cmake . -DALGO=2 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/HOG $dataset >> outputsk
-
-    cmake . -DALGO=2 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-    make HOG > makedump
-    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/HOG $dataset >> outputsk
+    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/SSPAHO $dataset >> outputssp
+    /usr/bin/time -f "$format" --output=memprofssp -a ./bin/SSP $dataset >> outputssp
+    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/SKAHO $dataset >> outputsk
+    /usr/bin/time -f "$format" --output=memprofsk -a ./bin/SK $dataset >> outputsk
 done
