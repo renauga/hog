@@ -28,7 +28,7 @@ void HOG_BCER::construct() {
     marked_ehog.resize(_etrie.t.size());
     mark_hog(1);
     marked.resize(_etrie.trie.t.size());
-    for(int i = 0;i<marked_ehog.size();i++){
+    for(int i = 0;i<(int)marked_ehog.size();i++){
         marked[_etrie.t[i].aho_index] = marked_ehog[i];
     }
 }
@@ -42,7 +42,7 @@ vector<bool> HOG_BCER::mark_hog(int v){
     vector<bool> C(_etrie.leaves.size(), true);
     for(int u:_etrie.t[v].childs){
         vector<bool> temp = mark_hog(u);
-        for(int i = 0;i<C.size();i++){
+        for(int i = 0;i<(int)C.size();i++){
             C[i] = C[i]&temp[i];
         }
     }
@@ -51,4 +51,8 @@ vector<bool> HOG_BCER::mark_hog(int v){
         C[x] = true;
     }
     return C;
+}
+void HOG_BCER::print_details(){
+    std::cout << "Aho-Corasick Size: " << _etrie.trie.t.size() << "\n";
+    std::cout << "EHOG Size: " << _etrie.t.size() << "\n";
 }

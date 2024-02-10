@@ -40,8 +40,12 @@ void HOG_EC::construct(){
     }   
     // build hog
     marked.resize(_etrie.trie.t.size());
-    for(int i = 0;i<marked_ehog.size();i++){
+    for(int i = 0;i<(int)marked_ehog.size();i++){
         marked[_etrie.t[i].aho_index] = marked_ehog[i];
     }
     marked[1] = true;
+}
+void HOG_EC::print_details(){
+    std::cout << "Aho-Corasick Size: " << _etrie.trie.t.size() << "\n";
+    std::cout << "EHOG Size: " << _etrie.t.size() << "\n";
 }
