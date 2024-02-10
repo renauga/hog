@@ -10,7 +10,6 @@ struct AhoxNode {
     char pch; // character of parent edge
     bool output = false; // is this node an exact match
     int next[alphabet]= {0}; // direct transition from this node using a character
-    int go[alphabet] = {0}; // best possible transition from this node
     int l = 1e9, r = -1e9;
     int str_index;
     int length = 0;
@@ -25,7 +24,6 @@ struct AhoCoraxsick {
     AhoCoraxsick();
 
     void add_string(std::string const& s);
-    int go(int v, char ch);
     int get_link(int v);
 
     std::vector<int> sorted_order();
