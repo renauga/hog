@@ -8,28 +8,35 @@ using namespace std;
 
 #include "HOG-SSP.h"
 typedef HOG_SSP HOG;
-
+#include "EHOG.h";
+typedef EHOG EHOG;
 #elif SK
 
 #include "HOG-SK.h"
 typedef HOG_SK HOG;
-
+#include "EHOG.h";
+typedef EHOG EHOG;
 #elif BCER
 
 #include "HOG-BCER.h"
 typedef HOG_BCER HOG;
-
-
+// #include "EHOGx.h";
+typedef EHOGx EHOG;
+typedef EHOGx_NODE EHOG_NODE;
 #elif EC
 
 #include "HOG-EC.h"
 typedef HOG_EC HOG;
-
+// #include "EHOGx.h";
+typedef EHOGx EHOG;
+typedef EHOGx_NODE EHOG_NODE;
 #else
 #include "HOG-SK.h"
 typedef HOG_SK HOG;
+#include "EHOG.h";
+typedef EHOG EHOG;
 #endif
-#include "EHOG.h"
+
 
 const int TRIALS = 1;
 
@@ -48,7 +55,7 @@ pair<double, double> get_mean_and_sd(vector<double> &a) {
 void stress_test_with_ehog(const vector<string>& v, std::string filename) {
     vector<double> ehog_times(TRIALS), hog_times(TRIALS), tot_times(TRIALS);
     ofstream fout;
-    fout.open("./ehog_dump/"+filename, ios::out);
+    fout.open("./ehog_dump/"+filename+"_ehog_object", ios::out);
     if(!fout) {
         cout<<"couldn't open file: "<<filename<<endl;
         return;
@@ -70,7 +77,7 @@ void stress_test_with_ehog(const vector<string>& v, std::string filename) {
 void stress_test_with_hog(std::string filename) {
     vector<double> hog_times(TRIALS);
     ifstream fin;
-    fin.open("./ehog_dump/"+filename, ios::in);
+    fin.open("./ehog_dump/"+filename+"_ehog_object", ios::in);
     if(!fin) {
         cout<<"couldn't open file: "<<filename<<endl;
         return;
@@ -133,11 +140,12 @@ void random_string_reads_stress_test(int n, int p, double overlap, int seed) {
 }
 
 void real_data_test(std::string dataset_name) {
-    string data_path = "./data/";
+    string data_path = "/home/user/parth/data/";
     // vector<string> filenames = {"clementina", "sinensis", "trifoliata", "elegans"};
     vector<string> filenames = {dataset_name};
 
     for(string fname:filenames) {
+#ifdef EHOG_CONSTRUCTION
         cout<<'\n'<<fname<<":\n";
         fstream fin;
         fin.open(data_path+fname, ios::in);
@@ -153,7 +161,6 @@ void real_data_test(std::string dataset_name) {
             total_length += v[i].length();
         }
         cout<<"Number of strings = "<<v.size()<<'\n'<<"Sum of lengths = "<<total_length<<'\n';
-#ifdef EHOG_CONSTRUCTION
         stress_test_with_ehog(v,fname);
 #else
         stress_test_with_hog(fname);

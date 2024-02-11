@@ -1,9 +1,14 @@
-echo "" > memprofbcer
-echo "" > memprofec
-echo "" > outputec
-echo "" > outputbcer
+mkdir ehog_dump
+mkdir dump
+echo "" > ./dump/memprofbcer
+echo "" > ./dump/memprofec
+echo "" > ./dump/outputec
+echo "" > ./dump/outputbcer
+echo "" > ./dump/memprofehog
+echo "" > ./dump/outputehog
 format="%M\nreal %e\nuser %U\nsys %S\n"
-s=(clementina 
+s=(
+    clementina 
     sinensis 
     trifoliata 
     elegans 
@@ -20,18 +25,13 @@ s=(clementina
     # V_cholerae_MiSeq
     # X_axonopodis_HiSeq
     ) 
-cmake . -DALGO=3 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-make BCEREHOG > makedump
-cmake . -DALGO=3 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-make BCER > makedump
-cmake . -DALGO=4 -DAHO_CORASICK_MEMORY=1 -DDATASET_MEMORY=0 > cmakedump
-make ECEHOG > makedump
-cmake . -DALGO=4 -DAHO_CORASICK_MEMORY=0 -DDATASET_MEMORY=0 > cmakedump
-make EC > makedump
+cmake .
+make BCER
+make EC
+make BCEREHOG
 
 for dataset in ${s[@]};do
-    /usr/bin/time -f "$format" --output=memprofbcer -a ./bin/BCEREHOG $dataset >> outputbcer
-    /usr/bin/time -f "$format" --output=memprofbcer -a ./bin/BCER $dataset >> outputbcer
-    /usr/bin/time -f "$format" --output=memprofec -a ./bin/ECEHOG $dataset >> outputec
-    /usr/bin/time -f "$format" --output=memprofec -a ./bin/EC $dataset >> outputec
+    /usr/bin/time -f "$format" --output=./dump/memprofehog -a ./bin/BCEREHOG $dataset >> ./dump/outputehog
+    /usr/bin/time -f "$format" --output=./dump/memprofbcer -a ./bin/BCER $dataset >> ./dump/outputbcer
+    /usr/bin/time -f "$format" --output=./dump/memprofec -a ./bin/EC $dataset >> ./dump/outputec
 done

@@ -4,6 +4,20 @@ using namespace std;
 
 EHOGx::EHOGx() {}
 
+void EHOGx::add_string(const std::string& s) {
+    trie.add_string(s);
+}
+
+void EHOGx::add_strings(const vector<string>& v) {
+    int p = 0;
+    for(auto &s:v) p += s.length();
+    trie.leaves.reserve(v.size());
+    trie.t.reserve(p);
+    for(auto &s:v) add_string(s);
+    construct();
+    build_rl();
+}
+
 void EHOGx::construct(){
     trie.sorted_order();
     marked.resize(trie.t.size());
@@ -18,10 +32,13 @@ void EHOGx::construct(){
     marked[1] = true;
     conversion.resize(trie.t.size());
     dfs(1, 0);
+    for(int i = 1;i<(int)t.size();i++){
+        t[i].link = conversion[trie.get_link(t[i].aho_index)];
+    }
 }
 
 int EHOGx::get_link(int v){
-    return conversion[trie.get_link(t[v].aho_index)];
+    return t[v].link;
 }
 void EHOGx::build_rl(){
     for(int v:leaves){
@@ -59,4 +76,12 @@ void EHOGx::dfs(int v, int par){
             }
         }
     }
+}
+void EHOGx::dump(ofstream& out){
+    out<<t.size()<<" ";
+    for(EHOGx_NODE &a:t){
+        a.dump(out);
+    }
+    out<<leaves.size()<<" ";
+    for(int a:leaves)out<<a<<" ";
 }
