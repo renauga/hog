@@ -14,7 +14,7 @@ public:
     // void add_string(const std::string &s);
     // void add_strings(const std::vector<std::string>& v);
     void construct();
-    void print_details();
+    void print_details(bool verbose);
     void inp(std::ifstream& in){
         int treeSize, leavesSize;
         in>>treeSize;

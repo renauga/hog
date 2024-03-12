@@ -17,7 +17,7 @@ struct EHOGx_NODE {
     inline bool is_leaf() {return output;}
     // inline bool is_leaf() {return output;}
     void dump(std::ofstream& out){
-        out<<p<<" "<<link<<" "<<output<<" ";
+        out<<p<<" "<<link<<" "<<output<<" "<<l<<" "<<r<<" ";
         out<<childs.size()<<" ";
         for(int a:childs)out<<a<<" ";
         out << rl.size()<<" ";
@@ -25,7 +25,7 @@ struct EHOGx_NODE {
         // out<<"\n";
     }
     void inp(std::ifstream& in){
-        in>>p>>link>>output;
+        in>>p>>link>>output>>l>>r;
         int numChild;
         in>>numChild;
         childs.resize(numChild);

@@ -59,10 +59,14 @@ void HOG_SK::dfs(int node) {
         }
     }
 }
-void HOG_SK::print_details(){
-    // std::cout << "Aho-Corasick Size: " << trie.trie.t.size() << "\n";
-    std::cout << "EHOG Size: " << t.size() << "\n";
+void HOG_SK::print_details(bool verbose){
     int hsz = 0;
     for(bool a:marked)hsz+=a;
-    std::cout << "HOG Size: " << hsz << "\n";
+    if(verbose){
+        std::cout << "EHOG Size: " << t.size() << "\n";
+        std::cout << "HOG Size: " << hsz << "\n";
+    }
+    else{
+        std::cout << "," << t.size() << "," << hsz;
+    }
 }

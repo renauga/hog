@@ -9,6 +9,7 @@ struct segtree{
         add.resize(4*N+5,0);
     }
     int segtree_min(int v, int l, int r, int ql, int qr){
+        if(qr<ql)return 1e9;
         if(r<l)return 1e9;
         if(ql<=l && r<=qr){
             return nim[v];
@@ -21,9 +22,10 @@ struct segtree{
         nim[2*v+2]+=add[v];
         add[2*v+2]+=add[v];
         add[v] = 0;
-        return std::min(segtree_min(2*v+1, l, (l+r)/2, ql, qr), segtree_min(2*v+2,(l+r)/2 + 1, r, ql, qr));
+        return std::min(segtree_min(2*v+1, l, (l+r)/2, ql, std::min(qr,(l+r)/2)), segtree_min(2*v+2,(l+r)/2 + 1, r, std::max((l+r)/2 + 1, ql), qr));
     }
     void segtree_update(int v, int l, int r, int ql, int qr, int val){
+        if(qr<ql)return;
         if(r<l)return;
         if(ql<=l && r<=qr){
             nim[v]+=val;
@@ -38,8 +40,8 @@ struct segtree{
         nim[2*v+2]+=add[v];
         add[2*v+2]+=add[v];
         add[v] = 0;
-        segtree_update(0, l, (l+r)/2, ql, qr, val);
-        segtree_update(0, (l+r)/2 + 1, r, ql, qr, val);
+        segtree_update(2*v+1, l, (l+r)/2, ql, std::min(qr,(l+r)/2), val);
+        segtree_update(2*v+2, (l+r)/2 + 1, r, std::max((l+r)/2 + 1, ql), qr, val);
         nim[v] = std::min(nim[2*v+1], nim[2*v+2]);
         return;
     }
@@ -55,7 +57,7 @@ public:
     // HOG_EC(const std::vector<std::string>& v);
 
     void construct();
-    void print_details();
+    void print_details(bool verbose);
     void inp(std::ifstream& in){
         int treeSize, leavesSize;
         in>>treeSize;

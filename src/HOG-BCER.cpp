@@ -31,7 +31,14 @@ vector<bool> HOG_BCER::mark_hog(int v){
     }
     return C;
 }
-void HOG_BCER::print_details(){
-    // std::cout << "Aho-Corasick Size: " << trie.t.size() << "\n";
-    std::cout << "EHOG Size: " << t.size() << "\n";
+void HOG_BCER::print_details(bool verbose){
+    int hsz = 0;
+    for(bool a:marked)hsz+=a;
+    if(verbose){
+        std::cout << "EHOG Size: " << t.size() << "\n";
+        std::cout << "HOG Size: " << hsz << "\n";
+    }
+    else{
+        std::cout << "," << t.size() << "," << hsz;
+    }
 }

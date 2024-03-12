@@ -16,3 +16,4 @@ CMakeFiles/
 output*
 ehog_dump/
 dump/
+build/

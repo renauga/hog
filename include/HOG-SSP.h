@@ -12,7 +12,7 @@ struct HOG_SSP {
 
     HOG_SSP();
     void construct();
-    void print_details();
+    void print_details(bool verbose);
     void inp(std::ifstream& in){
         int treeSize, leavesSize;
         in>>treeSize;

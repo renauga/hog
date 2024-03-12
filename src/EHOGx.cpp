@@ -58,6 +58,8 @@ void EHOGx::dfs(int v, int par){
         t[par].childs.push_back(eind);
         t.emplace_back(par);
         t[eind].aho_index = v;
+        t[eind].l = trie.t[v].l;
+        t[eind].r = trie.t[v].r;
         conversion[v] = eind;
         if(trie.t[v].is_leaf()){
             t[eind].output = true;
