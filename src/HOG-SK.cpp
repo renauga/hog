@@ -1,5 +1,6 @@
 #include "HOG-SK.h"
 #include "trace.h"
+#include "trace.h"
 
 using namespace std;
 

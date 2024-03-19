@@ -1,19 +1,11 @@
-/bin
-/log
-gmon.out
+
+# directories
+/.cache
 /.vscode
-*.png
-*.cmake
-*/CMakeFiles
-*Cache*
-*.so
-Makefile
+/bin
+/build
 /data
-/.gitignore
-CMakeFiles/
-.gitignore
-*.txt
-output*
-ehog_dump/
-dump/
-build/
+/log
+
+# files
+*.docx

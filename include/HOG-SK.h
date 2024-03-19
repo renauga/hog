@@ -1,5 +1,4 @@
-#ifndef HOG_SK_H
-#define HOG_SK_H
+#pragma once
 
 #include <bits/stdc++.h>
 
@@ -38,4 +37,3 @@ struct HOG_SK {
     
 };
 
-#endif

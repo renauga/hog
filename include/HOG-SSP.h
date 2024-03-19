@@ -1,8 +1,8 @@
-#ifndef HOG_SSP_H
-#define HOG_SSP_H
+#pragma once
 
 #include <bits/stdc++.h>
 
+#include "EHOG.h"
 #include "EHOG.h"
 
 struct HOG_SSP {
@@ -29,4 +29,3 @@ struct HOG_SSP {
     }
 };
 
-#endif

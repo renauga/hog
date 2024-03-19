@@ -1,5 +1,6 @@
 #include "HOG-SSP.h"
 #include "trace.h"
+#include "trace.h"
 using namespace std;
 
 HOG_SSP::HOG_SSP() {}
