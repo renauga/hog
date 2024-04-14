@@ -4,6 +4,7 @@
 #ifdef MEMORY_READING
 
 #include "memprofile.h"
+#include "stack_count.h"
 
 #endif
 

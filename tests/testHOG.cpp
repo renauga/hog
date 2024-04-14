@@ -158,11 +158,11 @@ int main(int argc, char **argv) {
         // cout<<"\nUsing algo by SSP...\n";
     #endif
 
-    // string dataset_name = argv[1];
-    // string output_file_name = dataset_name;
+    string dataset_name = argv[1];
+    string output_file_name = dataset_name;
 
-    int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
-    string output_file_name = "random/k_" + to_string(k) + "_n_" + to_string(n) + "_seed_" + to_string(seed);
+    // int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
+    // string output_file_name = "random/k_" + to_string(k) + "_n_" + to_string(n) + "_seed_" + to_string(seed);
 
     // int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
     // double o = stod(argv[3]);
@@ -245,6 +245,28 @@ int main(int argc, char **argv) {
 
     #endif // VIA_EHOG
 
+    #elif DIRECT
+    
+    #ifdef MEMORY_READING
+    MemProfile mp(argv[2], 0.1, 1024);
+    void* last_base = stack_count_clear();
+    #else
+    timer hog_timer;
+    #endif
+    vector<string> v = DatasetGenerator::generate_real_data(output_file_name);
+    AhoCorasick aho(v);
+    #ifdef VIA_EHOG
+    EHOG ehog(aho);
+    HOG hog(ehog);
+    #else
+    HOG hog(aho);
+    #endif
+
+    #ifdef MEMORY_READING
+    cout << stack_count_usage(last_base) << ",";
+    #else
+    cout << hog_timer.end() << ",";
+    #endif
     #else
 
     #ifdef VIA_EHOG
@@ -278,6 +300,7 @@ int main(int argc, char **argv) {
     #endif // VIA_EHOG
 
     #endif
+
 
     return 0;
 }
