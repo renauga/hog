@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bits/stdc++.h>
-
+#include "memprofile.h"
 const int alphabet = 4;
 
 struct AhoNode {
