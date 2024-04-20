@@ -93,11 +93,11 @@ int main(int argc, char **argv) {
         // cout<<"\nUsing algo by SSP...\n";
     #endif
 
-    // string dataset_name = argv[1];
-    // string output_file_name = dataset_name;
+    string dataset_name = argv[1];
+    string output_file_name = dataset_name;
 
-    int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
-    string output_file_name = "random/k_" + to_string(k) + "_n_" + to_string(n) + "_seed_" + to_string(seed);
+    // int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
+    // string output_file_name = "random/k_" + to_string(k) + "_n_" + to_string(n) + "_seed_" + to_string(seed);
 
     // int k = stoi(argv[1]), n = stoi(argv[2]), seed = stoi(argv[3]);
     // double o = stod(argv[3]);
@@ -161,6 +161,17 @@ int main(int argc, char **argv) {
 
     #endif // VIA_EHOG
 
+    #elif MERGED
+    
+    vector<string> v = DatasetGenerator::generate_real_data(dataset_name);
+    CommonTrie trie(v);
+    cout << trie.t.size() << endl;
+    HOG hog(trie);
+    hog.print_details(true);
+    trie.convert_aho_to_ehog();
+    cout << trie.t.size() << endl;
+    HOG hog2(trie);
+    hog2.print_details(true);
     #else
 
     #ifdef VIA_EHOG
