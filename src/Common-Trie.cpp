@@ -52,10 +52,7 @@ CommonTrie::CommonTrie(const std::vector<std::string> &v){
  
 int CommonTrie::traverse(int v, char ch){
     for(auto &[a,b] : t[v]->childs){
-        // if(a == string(1, ch)){
-        //     return b;
-        // }
-        if(a == ch){
+        if(a == string(1,ch)){
             return b;
         }
     }
@@ -69,6 +66,7 @@ void CommonTrie::add_string(string const& s) {
         if(child == 0){
             t.emplace_back(new CommonTrieNode(v, ch));
             child = t.size()-1;
+            t[v]->childs.emplace_back(make_pair(string(1,ch), child));
         }
         v = child;
     }
@@ -119,20 +117,20 @@ void CommonTrie::convert_aho_to_ehog(){
     dfs = [&marked, &conversion, this, &ehog_t, &dfs](int v, int par){
         if(marked[v] == true){
             int eind = ehog_t.size();
-            ehog_t[par]->childs.emplace_back(make_pair('.', eind));
+            if(par)ehog_t[par]->childs.emplace_back(make_pair(".", eind));
             ehog_t.push_back(t[v]);
+            ehog_t[eind]->p = par;
             ehog_t[eind]->aho_index = v;
             ehog_t[eind]->strIndex = t[v]->strIndex;
             conversion[v] = eind;
-            // to do change leave array
-            std::list<std::pair<char, int>> childs_copy;
+            std::list<std::pair<std::string, int>> childs_copy;
             swap(childs_copy, t[v]->childs);
             for(auto &[a,b] : childs_copy){
                 dfs(b, eind);
             }
         }
         else{
-            std::list<std::pair<char, int>> childs_copy;
+            std::list<std::pair<std::string, int>> childs_copy;
             swap(childs_copy, t[v]->childs);
             for(auto &[a,b] : childs_copy){
                 dfs(b, par);

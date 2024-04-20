@@ -15,7 +15,7 @@ struct CommonTrieNode {
     int strIndex = -1;
     int aho_index;
     // int next[alphabet]= {0}; // direct transition from this node using a character
-    std::list<std::pair<char, int>> childs;
+    std::list<std::pair<std::string, int>> childs;
 
     inline CommonTrieNode(int par, char ch) : p(par), pch(ch) {}
 

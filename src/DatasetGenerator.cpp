@@ -3,7 +3,7 @@
 using namespace std;
 
 vector<string> DatasetGenerator::generate_real_data(string datasetName) {
-    string data_path = "data/";
+    string data_path = "/home/user/parth/data/";
     fstream fin;
     fin.open(data_path + datasetName, ios::in);
     if (!fin) {

@@ -11,15 +11,15 @@ include_directories(./malloc_count)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -DDEBUG")
 
-add_library(COMMON_LIBRARY ./src/Aho-Cora.cpp ./src/EHOG.cpp ./src/Common-Trie.cpp ./src/timer.cpp ./src/DatasetGenerator.cpp ./malloc_count/malloc_count.c ./malloc_count/stack_count.c)
-target_link_libraries(COMMON_LIBRARY ${CMAKE_DL_LIBS})
+# add_library(COMMON_LIBRARY ./src/Aho-Cora.cpp ./src/EHOG.cpp ./src/Common-Trie.cpp ./src/timer.cpp ./src/DatasetGenerator.cpp ./malloc_count/malloc_count.c ./malloc_count/stack_count.c)
+# target_link_libraries(COMMON_LIBRARY ${CMAKE_DL_LIBS})
 
 add_library(COMMON_LIBRARY_TIME ./src/Aho-Cora.cpp ./src/EHOG.cpp ./src/Common-Trie.cpp ./src/timer.cpp ./src/DatasetGenerator.cpp)
 
 # change according to algorithm being tested
-add_executable(TEST ./src/HOG-SSP.cpp ./tests/validateHOG.cpp)
-target_compile_definitions(TEST PUBLIC SSP)
-target_link_libraries(TEST PUBLIC COMMON_LIBRARY)
+# add_executable(TEST ./src/HOG-SSP.cpp ./tests/validateHOG.cpp)
+# target_compile_definitions(TEST PUBLIC SSP)
+# target_link_libraries(TEST PUBLIC COMMON_LIBRARY)
 
 add_executable(SSP ./src/HOG-SSP.cpp ./src/HOG-BASE.cpp ./tests/testHOG.cpp)
 target_compile_definitions(SSP PUBLIC SSP MERGED)

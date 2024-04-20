@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
     
     vector<string> v = DatasetGenerator::generate_real_data(dataset_name);
     CommonTrie trie(v);
-    cout << trie.t.size() << endl;
+    cout << "," << trie.t.size() << endl;
     HOG hog(trie);
     hog.print_details(true);
     trie.convert_aho_to_ehog();
