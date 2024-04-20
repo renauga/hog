@@ -8,6 +8,7 @@
 /log
 /dump
 /output
+/MemProfile
 
 # files
 *.docx

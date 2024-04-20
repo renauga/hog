@@ -40,11 +40,11 @@ class DatasetGenerator {
     public:
 
     static vector<string> generate_real_data(string datasetName){
-        string data_path = "data/";
+        string data_path = "/home/user/parth/data/";
         fstream fin;
         fin.open(data_path+datasetName, ios::in);
         if(!fin) {
-            cout<<"couldn't open file: "<<datasetName<<endl;
+            std::cout<<"couldn't open file: "<<datasetName<<endl;
             return {};
         }
         long long k, total_length = 0;
@@ -55,20 +55,20 @@ class DatasetGenerator {
             total_length += v[i].length();
         }
 
-        /* cout<<"Dataset Name = " << datasetName << "\n";
-        cout<<"Number of strings = "<<v.size()<<'\n'<<"Sum of lengths = "<<total_length<<'\n'; */
+        /* std::cout<<"Dataset Name = " << datasetName << "\n";
+        std::cout<<"Number of strings = "<<v.size()<<'\n'<<"Sum of lengths = "<<total_length<<'\n'; */
 
-        cout<<","<<datasetName<<","<<v.size()<<","<<total_length;
+        std::cout<<datasetName<<","<<v.size()<<","<<total_length<<",";
 
         return v;
     }
 
     static vector<string> generate_random_data(int k, int n, int seed) {
         assert(n>=k);
-        // cout << "\nTesting on randomly generated strings...\n" << "N = " << n << ", P = " << p << '\n';
+        // std::cout << "\nTesting on randomly generated strings...\n" << "N = " << n << ", P = " << p << '\n';
         srand(seed);
 
-        cout << k << ',' << n << ','; cout.flush();
+        std::cout << k << ',' << n << ','; std::cout.flush();
         vector<string> v(k);
         int j=0;
         for(int i=0;i<n;i++,j++) {
@@ -84,8 +84,8 @@ class DatasetGenerator {
         assert(overlap<1.0);
         int len = n/k;
         int total_len = n*(1.0-overlap) + len*overlap;
-        // cout << "\nTesting on randomly generated reads on a randomly generated string...\n" << "N = " << n << ", P = " << p << ", o = " << overlap << '\n';
-        cout << k << ',' << n << ',' << overlap << ','; cout.flush();
+        // std::cout << "\nTesting on randomly generated reads on a randomly generated string...\n" << "N = " << n << ", P = " << p << ", o = " << overlap << '\n';
+        std::cout << k << ',' << n << ',' << overlap << ','; std::cout.flush();
         srand(seed);
         string complete_string = "";
         for(int i=0;i<total_len;i++) complete_string += ('a' + rand()%alphabet);
@@ -123,7 +123,7 @@ class TestRunner {
         timer time_aho;
         AhoCorasick aho(v);
         double time_aho_build = time_aho.end();
-        cout << aho.t.size() << ',' << time_aho_build << ',';
+        std::cout << aho.t.size() << ',' << time_aho_build << ',';
         ofstream fout;
         fout.open("./dump/aho/"+output_file_name);
         aho.file_output(fout);
@@ -134,7 +134,7 @@ class TestRunner {
         timer time_ehog;
         EHOG ehog(aho);
         double time_ehog_build = time_ehog.end();
-        cout << ehog.t.size() << ',' << time_ehog_build << ',';
+        std::cout << ehog.t.size() << ',' << time_ehog_build << ',';
         ofstream fout;
         fout.open("./dump/ehog/" + output_file_name);
         ehog.file_output(fout);
@@ -145,17 +145,17 @@ class TestRunner {
 
 int main(int argc, char **argv) {
     #ifdef SSP
-        // cout<<"\nUsing algo by SSP...\n";
+        // std::cout<<"\nUsing algo by SSP...\n";
     #elif SK
-        // cout<<"\nUsing algo by SK...\n";
+        // std::cout<<"\nUsing algo by SK...\n";
     #elif SP
-        // cout<<"\nUsing algo by SP...\n";
+        // std::cout<<"\nUsing algo by SP...\n";
     #elif BCER
-        // cout<<"\nUsing algo by BCER...\n";
+        // std::cout<<"\nUsing algo by BCER...\n";
     #elif EC
-        // cout<<"\nUsing algo by EC...\n";
+        // std::cout<<"\nUsing algo by EC...\n";
     #else
-        // cout<<"\nUsing algo by SSP...\n";
+        // std::cout<<"\nUsing algo by SSP...\n";
     #endif
 
     string dataset_name = argv[1];
@@ -195,56 +195,12 @@ int main(int argc, char **argv) {
     ifstream fin;
     fin.open(data_path, ios::in);
     if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
+        std::cout<<"couldn't open file: "<< data_path <<endl;
         return 0;
     }
     AhoCorasick ahocora(fin);
     TestRunner::ehog_construct_and_print(ahocora, output_file_name);
-
-    #elif SP
-
-    string data_path = "./dump/data/" + output_file_name;
-    ifstream fin;
-    fin.open(data_path, ios::in);
-    if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
-        return 0;
-    }
-    auto dataset = DatasetGenerator::read_data(fin);
-    fin.close();
-
-    data_path = "./dump/aho/" + output_file_name;
-    fin.open(data_path, ios::in);
-    if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
-        return 0;
-    }
-    AhoCorasick ahocora(fin);
-    fin.close();
-
-    #ifdef VIA_EHOG
-
-    data_path = "./dump/ehog/" + output_file_name;
-    fin.open(data_path, ios::in);
-    if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
-        return 0;
-    }
-    EHOG ehog(fin);
-    fin.close();
-
-    timer hog_timer;
-    HOG hog(ehog, ahocora, dataset);
-    cout << hog_timer.end() << ',';
-
-    #else
-
-    timer hog_timer;
-    HOG hog(ahocora, dataset);
-    cout << hog_timer.end() << ',';
-
-    #endif // VIA_EHOG
-
+    
     #elif DIRECT
     
     #ifdef MEMORY_READING
@@ -255,18 +211,77 @@ int main(int argc, char **argv) {
     #endif
     vector<string> v = DatasetGenerator::generate_real_data(output_file_name);
     AhoCorasick aho(v);
+    ofstream fout;
+    #ifdef SP
     #ifdef VIA_EHOG
     EHOG ehog(aho);
-    HOG hog(ehog);
+    HOG hog(ehog,aho,v);
     #else
-    HOG hog(aho);
+    HOG hog(aho,v);
+    #endif
+    #else
+    #ifdef VIA_EHOG
+    fout.open("./dump/ehog_dump/"+output_file_name, ios::out);
+    EHOG ehog(aho);
+    // HOG hog(ehog);
+    ehog.file_output(fout);
+    #else
+    fout.open("./dump/aho_dump/"+output_file_name, ios::out);
+    // HOG hog(aho);
+    aho.file_output(fout);
+    #endif
     #endif
 
     #ifdef MEMORY_READING
-    cout << stack_count_usage(last_base) << ",";
+    std::cout << stack_count_usage(last_base) << ",";
     #else
-    cout << hog_timer.end() << ",";
+    std::cout << hog_timer.end() << ",";
     #endif
+
+    #elif SP
+
+    string data_path = "./dump/data/" + output_file_name;
+    ifstream fin;
+    fin.open(data_path, ios::in);
+    if(!fin) {
+        std::cout<<"couldn't open file: "<< data_path <<endl;
+        return 0;
+    }
+    auto dataset = DatasetGenerator::read_data(fin);
+    fin.close();
+
+    data_path = "./dump/aho/" + output_file_name;
+    fin.open(data_path, ios::in);
+    if(!fin) {
+        std::cout<<"couldn't open file: "<< data_path <<endl;
+        return 0;
+    }
+    AhoCorasick ahocora(fin);
+    fin.close();
+
+    #ifdef VIA_EHOG
+
+    data_path = "./dump/ehog/" + output_file_name;
+    fin.open(data_path, ios::in);
+    if(!fin) {
+        std::cout<<"couldn't open file: "<< data_path <<endl;
+        return 0;
+    }
+    EHOG ehog(fin);
+    fin.close();
+
+    timer hog_timer;
+    HOG hog(ehog, ahocora, dataset);
+    std::cout << hog_timer.end() << ',';
+
+    #else
+
+    timer hog_timer;
+    HOG hog(ahocora, dataset);
+    std::cout << hog_timer.end() << ',';
+
+    #endif // VIA_EHOG
+
     #else
 
     #ifdef VIA_EHOG
@@ -275,13 +290,13 @@ int main(int argc, char **argv) {
     ifstream fin;
     fin.open(data_path, ios::in);
     if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
+        std::cout<<"couldn't open file: "<< data_path <<endl;
         return 0;
     }
     EHOG ehog(fin);
     timer hog_timer;
     HOG hog(ehog);
-    cout << hog_timer.end() << ',';
+    std::cout << hog_timer.end() << ',';
 
     #else
 
@@ -289,13 +304,13 @@ int main(int argc, char **argv) {
     ifstream fin;
     fin.open(data_path, ios::in);
     if(!fin) {
-        cout<<"couldn't open file: "<< data_path <<endl;
+        std::cout<<"couldn't open file: "<< data_path <<endl;
         return 0;
     }
     AhoCorasick ahocora(fin);
     timer hog_timer;
     HOG hog(ahocora);
-    cout << hog_timer.end() << ',';
+    std::cout << hog_timer.end() << ',';
 
     #endif // VIA_EHOG
 
