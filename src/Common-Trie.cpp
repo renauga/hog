@@ -2,23 +2,24 @@
 
 using namespace std;
 
-// CommonTrieNode::CommonTrieNode(ifstream&in){
-//     in >> p  >> link >> pch >> strIndex;
-//     for(int i = 0;i<alphabet;i++)in >> next[i];
-// }
+CommonTrieNode::CommonTrieNode(ifstream&in){
+    in >> p  >> link >> pch >> strIndex >> aho_index;
+    int childSize = 0;
+    cin >> childSize;
+    string a; int b;
+    for(int i = 0;i<childSize;i++){
+        cin >> a >> b;
+        childs.push_back(make_pair(a,b));
+    }
+}
 
-// void CommonTrieNode::file_output(ofstream& out){
-//     out << p << " " << link << " " << pch << " " << strIndex << " ";
-//     for(int i = 0;i<alphabet;i++){
-//         out << next[i]<< " ";
-//     } 
-// }
-
-// CommonTrie::CommonTrie() {
-//     t.emplace_back(-1, -1); //garbage node
-//     t.emplace_back(0, '$'); //root node
-//     t[1].link = 1;
-// }
+void CommonTrieNode::file_output(ofstream& out){
+    out << p << " " << link << " " << pch << " " << strIndex << " " << aho_index;
+    out << childs.size() << " ";
+    for(auto &[a,b] : childs){
+        out << a << " " << b << " ";
+    } 
+}
 
 CommonTrie::CommonTrie(const std::vector<std::string> &v){
     t.emplace_back(new CommonTrieNode(-1, -1)); //garbage node
@@ -32,27 +33,19 @@ CommonTrie::CommonTrie(const std::vector<std::string> &v){
     for(auto &s:v) add_string(s);
 
 }
-
-// CommonTrie::CommonTrie(std::ifstream &in){
-//     int treeSize;
-//     in >> treeSize;
-//     for(int i = 0;i<treeSize;i++)t.emplace_back(in);
-//     int leavesSize;
-//     in >> leavesSize;
-//     leaves.resize(leavesSize);
-//     for(int i = 0;i<leavesSize;i++)in >> leaves[i];
-// }
-
-// void CommonTrie::file_output(std::ofstream &out){
-//     out << t.size() << " ";
-//     for(int i = 0;i<(int)t.size();i++)t[i].file_output(out);
-//     out << leaves.size() << " ";
-//     for(int i = 0;i<(int)leaves.size();i++)out << leaves[i] << " ";
-// }
  
 int CommonTrie::traverse(int v, char ch){
     for(auto &[a,b] : t[v]->childs){
         if(a == string(1,ch)){
+            return b;
+        }
+    }
+    return 0;
+}
+
+int CommonTrie::traverse(int v, string s){
+    for(auto &[a,b] : t[v]->childs){
+        if(a == s){
             return b;
         }
     }
@@ -85,7 +78,7 @@ int CommonTrie::get_link(int v) {
             t[v]->link = 1;
         else {
             int x = get_link(t[v]->p);
-            char c = t[v]->pch;
+            string c = t[v]->pch;
             while(traverse(x, c) == 0 && x != 1){
                 x = get_link(x);
             }
@@ -95,10 +88,6 @@ int CommonTrie::get_link(int v) {
     }
     return t[v]->link;
 }
-
-// long long CommonTrie::memory_required(){
-//     return (t.capacity())*(sizeof(t)) + leaves.capacity()*(sizeof(int));
-// }
 
 void CommonTrie::convert_aho_to_ehog(){
     std::vector<bool>marked(t.size());
@@ -153,27 +142,19 @@ void CommonTrie::convert_aho_to_ehog(){
     isEHOG = true;
 }
 
-// EHOG::EHOG(std::ifstream &in){
-//     int treeSize;
-//     in >> treeSize;
-//     for(int i = 0;i<treeSize;i++)t.emplace_back(in);
-//     int leavesSize;
-//     in >> leavesSize;
-//     leaves.resize(leavesSize);
-//     for(int i = 0;i<leavesSize;i++)in >> leaves[i];
-// }
+CommonTrie::CommonTrie(std::ifstream &in){
+    int treeSize;
+    in >> treeSize;
+    for(int i = 0;i<treeSize;i++)t.emplace_back(new CommonTrieNode(in));
+    int leavesSize;
+    in >> leavesSize;
+    leaves.resize(leavesSize);
+    for(int i = 0;i<leavesSize;i++)in >> leaves[i];
+}
 
-// void EHOG::file_output(std::ofstream &out){
-//     out << t.size() << " ";
-//     for(int i = 0;i<(int)t.size();i++)t[i].file_output(out);
-//     out << leaves.size() << " ";
-//     for(int i = 0;i<(int)leaves.size();i++)out << leaves[i] << " ";
-// }
-
-// long long EHOG::memory_required(){
-//     long long mem = (t.capacity())*(sizeof(t)) + leaves.capacity()*(sizeof(int));
-//     for(int i = 0;i<(int)t.size();i++){
-//         mem += t[i].memory_required();
-//     }
-//     return mem;
-// }
+void CommonTrie::file_output(std::ofstream &out){
+    out << t.size() << " ";
+    for(int i = 0;i<(int)t.size();i++)t[i]->file_output(out);
+    out << leaves.size() << " ";
+    for(int i = 0;i<(int)leaves.size();i++)out << leaves[i] << " ";
+}

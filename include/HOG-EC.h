@@ -2,6 +2,7 @@
 #include <bits/stdc++.h>
 #include "EHOG.h"
 #include "HOG-BASE.h"
+#include "Common-Trie.h"
 
 struct segtree{
     std::vector<int>nim, add;
@@ -52,6 +53,8 @@ struct HOG_EC : public HOG_BASE{
 public:
     HOG_EC(EHOG &ehog);
     HOG_EC(AhoCorasick &aho);
+    HOG_EC(CommonTrie &trie);
+    
 private:
     std::vector<int>l, r;
 };

@@ -115,3 +115,58 @@ HOG_SK::HOG_SK(AhoCorasick &ahocora){
     };
     dfs(root);
 }
+
+HOG_SK::HOG_SK(CommonTrie &trie){
+    //construct l
+    int root = 1;
+    l.resize(trie.t.size());
+    for(int i=0;i<(int)trie.leaves.size();i++) {
+        int curr = trie.get_link(trie.leaves[i]);
+        while(curr != root) { // add to the list of each node on suffix path, except the leaf itself
+            l[curr].push_back(i);
+            curr = trie.get_link(curr);
+        }
+    }
+    marked.resize(trie.t.size(), false); // inH
+    marked[root] = true; //root is in HOG
+    s.resize(trie.leaves.size());
+    is_unmarked.resize(trie.leaves.size(), false);
+    std::function<void(int)> dfs;
+    dfs = [&trie, this, &dfs](int node){
+        if(trie.t[node]->is_leaf()) {
+            marked[node] = true; // leaves are implicitly in HOG
+            for(int x:unmarked) { // iterate over all stacks with unmarked tops
+                if(is_unmarked[x]) {
+                    marked[s[x].top()] = true;
+                    is_unmarked[x] = false;
+                }
+            }
+            unmarked.clear();
+        }
+
+        // node visited for the first time
+        for(int x:l[node]) {
+            s[x].push(node);
+            if(!is_unmarked[x]) {
+                is_unmarked[x] = true;
+                unmarked.push_back(x);
+            }
+        }
+        for(auto &[a, child] : trie.t[node]->childs){
+            dfs(child);
+        }
+        // node visited for the last time
+        for(int x:l[node]) {
+            s[x].pop();
+            if((!s[x].empty()) && (!marked[s[x].top()])) {
+                if(!is_unmarked[x]) {
+                    is_unmarked[x] = true;
+                    unmarked.push_back(x);
+                }
+            } else {
+                is_unmarked[x] = false;
+            }
+        }
+    };
+    dfs(root);
+}
